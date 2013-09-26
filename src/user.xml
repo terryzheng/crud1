@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<package name="user" namespace="/users" extends="main">
+		<interceptors>
+			<interceptor name="mylogger" class="com.crud.tool.myInterceptor"></interceptor>
+			<interceptor-stack name="myStack">
+			    <interceptor-ref name="tokenSession"/>
+				<interceptor-ref name="mylogger" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="myStack"></default-interceptor-ref>
+		<action name="*_*" class="com.crud.action.{1}Action" method="{2}">
+			<result name="input">/pages/new.jsp</result>
+			<result name="show">/WEB-INF/pages/update.jsp</result>
+			<result name="list">/pages/list.jsp</result>
+			<result name="tolist" type="redirect">/users/User_list.action</result>
+		</action>
+		<action name="Download" class="com.crud.action.DownloadAction">
+			<result type="stream">
+				<param name="contentDisposition">attachment;filename="123.bmp"</param>
+			</result>
+		</action>
+	</package>
+	<package name="helloworld" namespace="/aaa" extends="struts-default">
+		<action name="downloadAction" class="com.crud.action.DownloadAction">
+			<result type="stream">
+				<param name="contentType">application/x-msdownload;charset=ISO8859-1</param>
+			</result>
+		</action>
+	</package>
+</struts>
