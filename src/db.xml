@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!-- 引入配置文件 -->
+	<!-- <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+			</list>
+		</property>
+	</bean> -->
+
+	<!--配置数据源  -->
+	<bean id="dataSourceMySql" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClassName">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=utf-8</value>
+		</property>
+		<property name="username">
+			<value>root</value>
+		</property>
+		<property name="password">
+			<value>root</value>
+		</property>
+		<!-- <property name="maxPoolSize" value="${c3p0.maxPoolSize}" />
+		<property name="minPoolSize" value="${c3p0.minPoolSize}" />
+		<property name="initialPoolSize" value="${c3p0.initialPoolSize}" />
+		<property name="maxIdleTime" value="${c3p0.maxIdleTime}" /> -->
+	</bean>
+	 
+	<!-- 会话配置  -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSourceMySql" />
+		</property>
+		<property name="mappingResources">
+			<list>
+				<!-- 项目应用实体对象  -->
+				<value>com/crud/database/User.hbm.xml</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.dynamic-insert">true</prop>
+				<prop key="hibernate.dynamic-update">true</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- 事务管理配置  -->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<!-- 业务类声明式事务管理配模板,需要使用事务管理业务服务对象,直接继承此Bean[即 配置parent属性为此bean的id],方便统一配置 -->
+	<bean id="baseTransactionProxy"	class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"	abstract="true">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="transactionAttributes">
+			<props>
+				<!-- 指明进行事务管理业务方法名[*是通配符]  -->
+				<prop key="add*">PROPAGATION_REQUIRED</prop>
+				<prop key="edit*">PROPAGATION_REQUIRED</prop>
+				<prop key="del*">PROPAGATION_REQUIRED</prop>
+				<prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+			</props>
+		</property>
+	</bean>
+	 
+	<!-- Dao模板,具体实现Dao继承此bean的配置,省去各个Dao的重复配置 -->
+	<bean id="daoTemplate" abstract="true">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+</beans>

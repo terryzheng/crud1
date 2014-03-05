@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!-- 数据库配置  -->
+	<!-- <import resource="/db.xml" /> -->
+
+	<!-- 引入配置文件 -->
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 配置数据源 -->
+	<bean id="dataSourceMySql" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass">
+			<value>${c3p0.driverClass}</value>
+		</property>
+		<property name="jdbcUrl">
+			<value>${c3p0.jdbcUrl}</value>
+		</property>
+		<property name="user">
+			<value>${c3p0.user}</value>
+		</property>
+		<property name="password">
+			<value>${c3p0.password}</value>
+		</property>
+		<property name="maxPoolSize">
+			<value>${c3p0.maxPoolSize}</value>
+		</property>
+		<property name="minPoolSize">
+			<value>${c3p0.minPoolSize}</value>
+		</property>
+		<property name="initialPoolSize">
+			<value>${c3p0.initialPoolSize}</value>
+		</property>
+		<property name="maxIdleTime">
+			<value>${c3p0.maxIdleTime}</value>
+		</property>
+	</bean>
+
+	<!-- 会话配置  -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSourceMySql" />
+		</property>
+		<property name="mappingResources">
+			<list>
+				<!-- 项目应用实体对象  -->
+				<value>com/crud/model/User.hbm.xml</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.dynamic-insert">true</prop>
+				<prop key="hibernate.dynamic-update">true</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- TransactionManager -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="userDao" class="com.crud.dao.UserDao">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="userService" class="com.crud.service.UserService">
+		<property name="userDao">
+			<ref bean="userDao" />
+		</property>
+	</bean>
+
+	<bean id="UserAction" class="com.crud.action.UserAction" />
+	<bean id="myInterceptor" class="com.crud.util.myInterceptor" />
+</beans>

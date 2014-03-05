@@ -1,6 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=gb2312"
-	pageEncoding="gb2312"%>
-<%@ page import="com.crud.database.UserModel"%>
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
+<%@ page import="com.crud.model.User"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.ArrayList"%>
 
@@ -15,7 +15,7 @@
 </head>
 <body>
 	<%
-		List<UserModel> umlist = (List<UserModel>) request
+		List<User> umlist = (List<User>) request
 				.getAttribute("umlist");
 	%>
 	<table border="1" cellpadding="1" cellspacing="0" align="center">
@@ -33,7 +33,7 @@
 		</tr>
 		<%
 			if (umlist != null) {
-				for (UserModel um : umlist) {
+				for (User um : umlist) {
 		%>
 		<tr>
 			<td><%=um.getUserId()%></td>

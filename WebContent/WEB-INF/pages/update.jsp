@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=gb2312"
 	pageEncoding="gb2312"%>
-<%@ page import="com.crud.database.UserModel"%>
+<%@ page import="com.crud.model.User"%>
 <%@taglib prefix="s" uri="/struts-tags"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"   
 "http://www.w3.org/TR/html4/loose.dtd">
@@ -11,7 +11,7 @@
 </head>
 <body>
 	<%
-		UserModel um = (UserModel) request.getAttribute("user");
+		User um = (User) request.getAttribute("user");
 	%>
 
 	<form action="/users/User_update.action" method="post">

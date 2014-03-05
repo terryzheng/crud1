@@ -25,7 +25,6 @@
 		</select>
 		<s:text name="user.age" />
 		： <input name="um.age" /> 头像： <input type="file" name="myFile" />
-		<s:token />
 		<s:submit name="" key="add.submit" />
 		<a href="/aaa/downloadAction.action">下载文件</a>
 	</form>
